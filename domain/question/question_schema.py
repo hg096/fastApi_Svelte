@@ -14,6 +14,7 @@ class Question(BaseModel):
     create_date: datetime.datetime
     answers: list[Answer] = []
     user: User | None
+    modify_date: datetime.datetime | None = None
 
     class Config:
         orm_mode = True
@@ -33,3 +34,11 @@ class QuestionCreate(BaseModel):
 class QuestionList(BaseModel):
     total: int = 0
     question_list: list[Question] = []
+
+
+class QuestionUpdate(QuestionCreate):
+    question_id: int
+
+
+class QuestionDelete(BaseModel):
+    question_id: int
