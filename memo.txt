@@ -1,0 +1,7 @@
+
+가상환경 들어가기
+cd C:\venvs\myapi\Scripts
+activate
+
+가상환경 나가기
+deactivate
