@@ -3,6 +3,8 @@
     import Error from "../components/Error.svelte"
     import { link, push } from 'svelte-spa-router'
     import { is_login, username } from "../lib/store"
+    import { marked } from 'marked'
+
     import moment from 'moment/min/moment-with-locales'
     moment.locale('ko')
 
@@ -11,7 +13,8 @@
     export let params = {}
     let question_id = params.question_id
     // console.log('question_id:'+ question_id)
-    let question = {answers:[], voter:[]}
+    // 초기값을 설정해주는 이유는 처음 로드되고 빈값에러를 방지하기 위함 + 초기화
+    let question = {answers:[], voter:[], content: ''}
     let content = ""
     let error = {detail:[]}
 
@@ -119,7 +122,9 @@
     <h2 class="border-bottom py-2">{question.subject}</h2>
     <div class="card my-3">
         <div class="card-body">
-            <div class="card-text" style="white-space: pre-line;">{question.content}</div>
+            <!-- style="white-space: pre-line;"  {question.content} -->
+            <!-- 스벨트에서 @html은 HTML 코드를 &lt;, &gt; 와 같은 문자열로 변환(strip tags)하지 않고 HTML을 있는 그대로 표시하기 위해 사용 -->
+            <div class="card-text" >{@html marked.parse(question.content)}</div>
             <div class="d-flex justify-content-end">
                 {#if question.modify_date }
                     <div class="badge bg-light text-dark p-2 text-start mx-3">
@@ -157,7 +162,8 @@
     {#each question.answers as answer}
     <div class="card my-3">
         <div class="card-body">
-            <div class="card-text" style="white-space: pre-line;">{answer.content}</div>
+            <!-- style="white-space: pre-line;"  {answer.content} -->
+            <div class="card-text" >{@html marked.parse(answer.content)}</div>
             <div class="d-flex justify-content-end">
                 {#if answer.modify_date }
                     <div class="badge bg-light text-dark p-2 text-start mx-3">
