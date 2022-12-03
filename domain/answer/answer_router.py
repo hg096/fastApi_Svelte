@@ -44,6 +44,8 @@ def answer_detail(answer_id: int, db: Session = Depends(get_db)):
 def answer_update(_answer_update: answer_schema.AnswerUpdate,
                   db: Session = Depends(get_db),
                   current_user: User = Depends(get_current_user)):
+
+    # 실행전 값 체크
     db_answer = answer_crud.get_answer(db, answer_id=_answer_update.answer_id)
     if not db_answer:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="데이터를 찾을수 없습니다.")
@@ -57,6 +59,8 @@ def answer_update(_answer_update: answer_schema.AnswerUpdate,
 def answer_delete(_answer_delete: answer_schema.AnswerDelete,
                   db: Session = Depends(get_db),
                   current_user: User = Depends(get_current_user)):
+
+    # 실행전 값 체크
     db_answer = answer_crud.get_answer(db, answer_id=_answer_delete.answer_id)
     if not db_answer:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="데이터를 찾을수 없습니다.")
@@ -64,4 +68,18 @@ def answer_delete(_answer_delete: answer_schema.AnswerDelete,
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="삭제 권한이 없습니다.")
 
     answer_crud.delete_answer(db=db, db_answer=db_answer)
+
+
+@router.post("/vote", status_code=status.HTTP_204_NO_CONTENT)
+def answer_vote(_answer_vote: answer_schema.AnswerVote,
+                db: Session = Depends(get_db),
+                current_user: User = Depends(get_current_user)):
+
+    # 실행전 값 체크
+    db_answer = answer_crud.get_answer(db, answer_id=_answer_vote.answer_id)
+    if not db_answer:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="데이터를 찾을수 없습니다.")
+
+    answer_crud.vote_answer(db, db_answer=db_answer, db_user=current_user)
+
 
