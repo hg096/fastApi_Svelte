@@ -26,7 +26,7 @@ def update_answer(db: Session, db_answer: Answer,
     db.add(db_answer)
     db.commit()
 
-
+# >>> 지울때 cascade 설정 알아보기
 def delete_answer(db: Session, db_answer: Answer):
     db.delete(db_answer)
     db.commit()
